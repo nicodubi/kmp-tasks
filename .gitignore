@@ -1,0 +1,55 @@
+.kotlin
+.gradle
+**/build/
+xcuserdata
+!src/**/build/
+local.properties
+.idea
+.DS_Store
+captures
+.externalNativeBuild
+.cxx
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
+.fleet/
+
+# Ignore IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Ignore build folders
+/build/
+.gradle/
+.cxx/
+.cinterop/
+
+# Ignore Kotlin/Multiplatform dependencies
+/.konan/
+/.kotlinc/
+/*.klib
+
+# Ignore iOS Xcode files
+iosApp/Pods/
+iosApp/.swiftpm/
+iosApp/.build/
+iosApp/DerivedData/
+iosApp/.DS_Store
+iosApp/*.xcworkspace
+iosApp/*.xcodeproj/project.xcworkspace/
+iosApp/*.xcodeproj/xcuserdata/
+
+# Ignore Android build files
+androidApp/.gradle/
+androidApp/local.properties
+androidApp/.cxx/
+androidApp/app/build/
+androidApp/.idea/
+
+# Ignore environment variables and config
+.env
