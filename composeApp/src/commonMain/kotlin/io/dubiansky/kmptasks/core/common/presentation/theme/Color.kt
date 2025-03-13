@@ -1,4 +1,4 @@
-package io.dubiansky.kmptasks.ui.theme
+package io.dubiansky.kmptasks.core.common.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
