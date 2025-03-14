@@ -8,7 +8,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
-
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -53,6 +54,10 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
+
+
 
 
 
@@ -90,5 +95,14 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    add("kspAndroid", libs.androidx.room.compiler) // Used for Android in KMP
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler) // For iOS simulators on Mac M1/M2
+    add("kspIosX64", libs.androidx.room.compiler) // For iOS simulators on Intel Macs
+    add("kspIosArm64", libs.androidx.room.compiler) // For physical iOS devices (A-series chips)
+
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
