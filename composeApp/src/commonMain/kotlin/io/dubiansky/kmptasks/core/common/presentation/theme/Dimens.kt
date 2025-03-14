@@ -7,6 +7,9 @@ import androidx.compose.ui.unit.dp
  */
 
 object Dimens {
-    val paddingTaskItem = 8.dp
-
+    val taskItemPadding = 8.dp
+    val taskItemElevation = 2.dp
+    val taskItemCornerRadius = 12.dp
+    val taskItemContentPadding = 16.dp
+    val taskItemSpacing = 12.dp
 }

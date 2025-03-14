@@ -1,7 +1,9 @@
 package io.dubiansky.kmptasks.core.common.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -45,4 +47,11 @@ private val DarkColorPalette = darkColorScheme(
     onBackground = DarkOnBackground,
     onSurface = DarkOnSurface,
     onError = DarkOnError,
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TaskTopAppBarColorsTheme() = TopAppBarDefaults.topAppBarColors(
+    containerColor = MaterialTheme.colorScheme.primary,
+    titleContentColor = MaterialTheme.colorScheme.onPrimary
 )
