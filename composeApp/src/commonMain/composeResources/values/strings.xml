@@ -5,6 +5,9 @@
     <string name="add">Add</string>
     <string name="add_task_title_label">Task title</string>
     <string name="add_task_description_label">Description (optional)</string>
+    <string name="title_cannot_be_empty">Title cannot be empty</string>
     <string name="save">SAVE</string>
+    <string name="something_went_wrong">Something went wrong. Try again later...</string>
+    <string name="title_too_long">Title is too long</string>
 
 </resources>
