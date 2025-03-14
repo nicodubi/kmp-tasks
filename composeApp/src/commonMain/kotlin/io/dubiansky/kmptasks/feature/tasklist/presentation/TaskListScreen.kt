@@ -11,14 +11,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.koin.compose.viewmodel.koinViewModel
@@ -31,6 +40,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.dubiansky.kmptasks.core.common.data.model.Task
 import io.dubiansky.kmptasks.core.common.presentation.theme.Dimens
+import io.dubiansky.kmptasks.core.common.presentation.theme.TaskTopAppBarColorsTheme
+import io.dubiansky.kmptasks.core.common.presentation.ui.LoadingContent
+import kmptasks.composeapp.generated.resources.Res
+import kmptasks.composeapp.generated.resources.add
+import kmptasks.composeapp.generated.resources.app_name
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Created by Nicolas Dubiansky on 12/03/2025.
@@ -41,28 +56,50 @@ import io.dubiansky.kmptasks.core.common.presentation.theme.Dimens
  * @param taskListViewModel ViewModel that handles the business logic of this screen
  */
 @Composable
-fun TaskListScreen(taskListViewModel: TaskListViewModel = koinViewModel()) {
+fun TaskListScreen(taskListViewModel: TaskListViewModel = koinViewModel(), onAddTask: () -> Unit) {
     val uiState by taskListViewModel.taskListUiState
-    TaskListScreenContent(taskListUiState = uiState)
+    TaskListScreenContent(taskListUiState = uiState, onAddTask = onAddTask)
 }
 
 /**
  * This composable is StateLess: is in charge to display the UI.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskListScreenContent(modifier: Modifier = Modifier, taskListUiState: TaskListUiState) {
-    Scaffold(modifier = modifier.fillMaxSize()) { paddingValues ->
+fun TaskListScreenContent(
+    modifier: Modifier = Modifier,
+    taskListUiState: TaskListUiState,
+    onAddTask: () -> Unit,
+) {
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = { TaskListTopAppBar() },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { onAddTask() }) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(Res.string.add)
+                )
+            }
+        }) { paddingValues ->
         Surface(modifier = modifier.padding(paddingValues)) {
             TaskList(taskList = taskListUiState.tasks)
+            taskListUiState.error?.let { ShowTaskListError(it) }
+            LoadingContent(taskListUiState.isLoading)
         }
     }
+}
+
+@Composable
+fun ShowTaskListError(error: Exception) {
+    //TODO handle errors here
 }
 
 @Composable
 fun TaskList(modifier: Modifier = Modifier, taskList: List<Task>) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(Dimens.paddingTaskItem)
+        contentPadding = PaddingValues(Dimens.taskItemPadding)
     ) {
         items(items = taskList, key = { it.id }) { task ->
             TaskItem(task = task)
@@ -79,15 +116,15 @@ fun TaskItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(Dimens.paddingTaskItem),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(12.dp),
+            .padding(Dimens.taskItemPadding),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.taskItemElevation),
+        shape = RoundedCornerShape(Dimens.taskItemCornerRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(Dimens.taskItemContentPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
@@ -99,7 +136,7 @@ fun TaskItem(
                 )
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(Dimens.taskItemSpacing))
 
             Column(
                 modifier = Modifier
@@ -129,3 +166,15 @@ fun TaskItem(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class) //This is for TopAppBar
+@Composable
+private fun TaskListTopAppBar(
+    colors: TopAppBarColors = TaskTopAppBarColorsTheme(),
+) {
+    TopAppBar(
+        title = {
+            Text(stringResource(Res.string.app_name))
+        },
+        colors = colors
+    )
+}
