@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,26 +20,28 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import org.koin.compose.viewmodel.koinViewModel
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import io.dubiansky.kmptasks.core.common.data.model.Task
+import io.dubiansky.kmptasks.core.common.domain.Error
 import io.dubiansky.kmptasks.core.common.presentation.theme.Dimens
 import io.dubiansky.kmptasks.core.common.presentation.theme.TaskTopAppBarColorsTheme
+import io.dubiansky.kmptasks.core.common.presentation.ui.ErrorContent
 import io.dubiansky.kmptasks.core.common.presentation.ui.LoadingContent
 import kmptasks.composeapp.generated.resources.Res
 import kmptasks.composeapp.generated.resources.add
@@ -56,9 +57,13 @@ import org.jetbrains.compose.resources.stringResource
  * @param taskListViewModel ViewModel that handles the business logic of this screen
  */
 @Composable
-fun TaskListScreen(taskListViewModel: TaskListViewModel = koinViewModel(), onAddTask: () -> Unit) {
-    val uiState by taskListViewModel.taskListUiState
-    TaskListScreenContent(taskListUiState = uiState, onAddTask = onAddTask)
+fun TaskListScreen(viewModel: TaskListViewModel = koinViewModel(), onAddTask: () -> Unit) {
+    TaskListScreenContent(
+        isLoading = viewModel.isLoading,
+        error = viewModel.error,
+        tasks = viewModel.tasks,
+        onAddTask = onAddTask
+    )
 }
 
 /**
@@ -68,9 +73,14 @@ fun TaskListScreen(taskListViewModel: TaskListViewModel = koinViewModel(), onAdd
 @Composable
 fun TaskListScreenContent(
     modifier: Modifier = Modifier,
-    taskListUiState: TaskListUiState,
+    isLoading: Boolean,
+    error: Error?,
+    tasks: List<Task>,
     onAddTask: () -> Unit,
-) {
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+
+
+    ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = { TaskListTopAppBar() },
@@ -83,17 +93,14 @@ fun TaskListScreenContent(
             }
         }) { paddingValues ->
         Surface(modifier = modifier.padding(paddingValues)) {
-            TaskList(taskList = taskListUiState.tasks)
-            taskListUiState.error?.let { ShowTaskListError(it) }
-            LoadingContent(taskListUiState.isLoading)
+            TaskList(taskList = tasks)
+            error?.let { ErrorContent(error = it, snackbarHostState = snackbarHostState) }
+            LoadingContent(isLoading)
         }
     }
 }
 
-@Composable
-fun ShowTaskListError(error: Exception) {
-    //TODO handle errors here
-}
+
 
 @Composable
 fun TaskList(modifier: Modifier = Modifier, taskList: List<Task>) {
