@@ -3,6 +3,8 @@ package io.dubiansky.kmptasks.core.di
 import io.dubiansky.kmptasks.core.common.data.repository.TaskRepositoryImpl
 import io.dubiansky.kmptasks.core.common.data.source.TaskLocalDataSource
 import io.dubiansky.kmptasks.core.common.domain.TaskRepository
+import io.dubiansky.kmptasks.feature.addtask.domain.AddTaskUseCase
+import io.dubiansky.kmptasks.feature.addtask.presentation.AddTaskViewModel
 import io.dubiansky.kmptasks.feature.tasklist.domain.GetTaskListUseCase
 import io.dubiansky.kmptasks.feature.tasklist.presentation.TaskListViewModel
 import org.koin.core.context.startKoin
@@ -24,10 +26,13 @@ val dataModule = module {
 
 val useCaseModule = module {
     factoryOf(::GetTaskListUseCase)
+    factoryOf(::AddTaskUseCase)
 }
 
 val viewModelModule = module {
     viewModelOf(::TaskListViewModel)
+    viewModelOf(::AddTaskViewModel)
+
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {
