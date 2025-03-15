@@ -23,6 +23,10 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
         taskDao.insertTask(taskEntity)
         return taskEntity.toDomainTask()
     }
+
+    override suspend fun changeTaskCompleted(task: Task) {
+        taskDao.insertTask(task.copy(isCompleted = !task.isCompleted).toEntity())
+    }
 }
 
 fun TaskEntity.toDomainTask(): Task {
@@ -40,5 +44,14 @@ fun TaskInput.toEntity(): TaskEntity {
         title = this.title,
         description = this.description,
         isCompleted = false
+    )
+}
+
+fun Task.toEntity(): TaskEntity {
+    return TaskEntity(
+        id = id,
+        title = this.title,
+        description = this.description,
+        isCompleted = isCompleted
     )
 }
