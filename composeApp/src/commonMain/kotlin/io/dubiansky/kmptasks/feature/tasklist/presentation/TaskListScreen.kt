@@ -62,7 +62,8 @@ fun TaskListScreen(viewModel: TaskListViewModel = koinViewModel(), onAddTask: ()
         isLoading = viewModel.isLoading,
         error = viewModel.error,
         tasks = viewModel.tasks,
-        onAddTask = onAddTask
+        onAddTask = onAddTask,
+        onChangeCompletedTask = {viewModel.onChangeCompletedTask(it)}
     )
 }
 
@@ -77,6 +78,7 @@ fun TaskListScreenContent(
     error: Error?,
     tasks: List<Task>,
     onAddTask: () -> Unit,
+    onChangeCompletedTask: (Task) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 
 
@@ -93,7 +95,7 @@ fun TaskListScreenContent(
             }
         }) { paddingValues ->
         Surface(modifier = modifier.padding(paddingValues)) {
-            TaskList(taskList = tasks)
+            TaskList(taskList = tasks, onChangeCompletedTask = onChangeCompletedTask)
             error?.let { ErrorContent(error = it, snackbarHostState = snackbarHostState) }
             LoadingContent(isLoading)
         }
@@ -103,13 +105,13 @@ fun TaskListScreenContent(
 
 
 @Composable
-fun TaskList(modifier: Modifier = Modifier, taskList: List<Task>) {
+fun TaskList(modifier: Modifier = Modifier, taskList: List<Task>, onChangeCompletedTask: (Task) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(Dimens.taskItemPadding)
     ) {
         items(items = taskList, key = { it.id }) { task ->
-            TaskItem(task = task)
+            TaskItem(task = task, onTaskChecked = {onChangeCompletedTask(task)})
         }
     }
 }
@@ -118,7 +120,7 @@ fun TaskList(modifier: Modifier = Modifier, taskList: List<Task>) {
 fun TaskItem(
     task: Task,
     modifier: Modifier = Modifier,
-    onTaskChecked: (Boolean) -> Unit = {},
+    onTaskChecked: () -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -136,7 +138,7 @@ fun TaskItem(
         ) {
             Checkbox(
                 checked = task.isCompleted,
-                onCheckedChange = { onTaskChecked(it) },
+                onCheckedChange = { onTaskChecked() },
                 colors = CheckboxDefaults.colors(
                     checkedColor = MaterialTheme.colorScheme.primary,
                     uncheckedColor = MaterialTheme.colorScheme.onSurface

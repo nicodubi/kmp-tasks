@@ -10,4 +10,5 @@ import kotlinx.coroutines.flow.Flow
 interface TaskRepository {
     suspend fun getTaskList(): Flow<List<Task>>
     suspend fun addTask(taskInput: TaskInput) : Task
+    suspend fun changeTaskCompleted(task: Task)
 }
