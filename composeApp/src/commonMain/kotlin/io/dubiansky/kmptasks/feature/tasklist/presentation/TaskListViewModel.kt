@@ -13,13 +13,17 @@ import io.dubiansky.kmptasks.core.common.data.model.Task
 import io.dubiansky.kmptasks.core.common.domain.Error
 import io.dubiansky.kmptasks.core.common.domain.GeneralError
 import io.dubiansky.kmptasks.core.common.domain.ResultState
+import io.dubiansky.kmptasks.feature.tasklist.domain.ChangeCompletedTaskUseCase
 
 /**
  * Created by Nicolas Dubiansky on 12/03/2025.
  */
 
 
-class TaskListViewModel(private val getTaskListUseCase: GetTaskListUseCase) : ViewModel() {
+class TaskListViewModel(
+    private val getTaskListUseCase: GetTaskListUseCase,
+    private val changeCompletedTaskUseCase: ChangeCompletedTaskUseCase,
+) : ViewModel() {
 
     var isLoading by mutableStateOf(false)
         private set
@@ -49,6 +53,14 @@ class TaskListViewModel(private val getTaskListUseCase: GetTaskListUseCase) : Vi
                     isLoading = false
                 }
         }
+    }
+
+    fun onChangeCompletedTask(task: Task) {
+
+        viewModelScope.launch {
+            changeCompletedTaskUseCase.changeTaskCompleted(task)
+        }
+
     }
 
 }
