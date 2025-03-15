@@ -20,7 +20,7 @@ class TaskLocalDataSource {
 
         val tasksListFake = (1..15).map {
             Task(
-                id = it,
+                id = it.toLong(),
                 title = "Task $it",
                 description = "Description $it",
                 isCompleted = it % 2 == 0
@@ -34,7 +34,7 @@ class TaskLocalDataSource {
         //TODO fake database request until Room implementation
         delay(1500)
         val task =
-            Task(title = taskInput.title, description = taskInput.description, id = tasks.size + 1)
+            Task(title = taskInput.title, description = taskInput.description, id = (tasks.size + 1).toLong())
         tasks.add(task)
         return task
     }

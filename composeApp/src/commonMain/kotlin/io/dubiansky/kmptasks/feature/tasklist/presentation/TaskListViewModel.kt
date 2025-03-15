@@ -38,16 +38,17 @@ class TaskListViewModel(private val getTaskListUseCase: GetTaskListUseCase) : Vi
     private fun loadTasks() {
         isLoading = true
         error = null
+
         viewModelScope.launch {
-
-            val result = getTaskListUseCase.getTaskList()
-            when (result) {
-                is ResultState.Success -> tasks = result.data
-                is ResultState.Failure -> error = GeneralError.SOMETHING_WENT_WRONG
-            }
-
-            isLoading = false
+            getTaskListUseCase.getTaskList()
+                .collect { result ->
+                    when (result) {
+                        is ResultState.Success -> tasks = result.data
+                        is ResultState.Failure -> error = GeneralError.SOMETHING_WENT_WRONG
+                    }
+                    isLoading = false
+                }
         }
-
     }
+
 }

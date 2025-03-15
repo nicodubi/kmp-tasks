@@ -52,18 +52,22 @@ class TaskListViewModelMVI(private val getTaskListUseCase: GetTaskListUseCase) :
     }
 
     private fun loadTasks() {
-        viewModelScope.launch {
-            taskListUiState = taskListUiState.copy(isLoading = true, error = null)
+        taskListUiState = taskListUiState.copy(isLoading = true, error = null)
 
-            val result = getTaskListUseCase.getTaskList()
-            when (result) {
-                is ResultState.Success -> taskListUiState = TaskListUiState(tasks = result.data)
-                is ResultState.Failure -> taskListUiState =
-                    taskListUiState.copy(
-                        isLoading = false,
-                        error = GeneralError.SOMETHING_WENT_WRONG
-                    )
-            }
+        viewModelScope.launch {
+            getTaskListUseCase.getTaskList()
+                .collect { result ->
+                    when (result) {
+                        is ResultState.Success -> taskListUiState =
+                            TaskListUiState(tasks = result.data)
+
+                        is ResultState.Failure -> taskListUiState =
+                            taskListUiState.copy(
+                                isLoading = false,
+                                error = GeneralError.SOMETHING_WENT_WRONG
+                            )
+                    }
+                }
         }
     }
 }
