@@ -57,13 +57,18 @@ import org.jetbrains.compose.resources.stringResource
  * @param taskListViewModel ViewModel that handles the business logic of this screen
  */
 @Composable
-fun TaskListScreen(viewModel: TaskListViewModel = koinViewModel(), onAddTask: () -> Unit) {
+fun TaskListScreen(
+    viewModel: TaskListViewModel = koinViewModel(),
+    onAddTask: () -> Unit,
+    onSelectTask: (Task) -> Unit,
+) {
     TaskListScreenContent(
         isLoading = viewModel.isLoading,
         error = viewModel.error,
         tasks = viewModel.tasks,
         onAddTask = onAddTask,
-        onChangeCompletedTask = {viewModel.onChangeCompletedTask(it)}
+        onChangeCompletedTask = { viewModel.onChangeCompletedTask(it) },
+        onSelectTask = onSelectTask
     )
 }
 
@@ -79,6 +84,7 @@ fun TaskListScreenContent(
     tasks: List<Task>,
     onAddTask: () -> Unit,
     onChangeCompletedTask: (Task) -> Unit,
+    onSelectTask: (Task) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 
 
@@ -95,7 +101,11 @@ fun TaskListScreenContent(
             }
         }) { paddingValues ->
         Surface(modifier = modifier.padding(paddingValues)) {
-            TaskList(taskList = tasks, onChangeCompletedTask = onChangeCompletedTask)
+            TaskList(
+                taskList = tasks,
+                onChangeCompletedTask = onChangeCompletedTask,
+                onSelectTask = onSelectTask
+            )
             error?.let { ErrorContent(error = it, snackbarHostState = snackbarHostState) }
             LoadingContent(isLoading)
         }
@@ -103,15 +113,23 @@ fun TaskListScreenContent(
 }
 
 
-
 @Composable
-fun TaskList(modifier: Modifier = Modifier, taskList: List<Task>, onChangeCompletedTask: (Task) -> Unit) {
+fun TaskList(
+    modifier: Modifier = Modifier,
+    taskList: List<Task>,
+    onChangeCompletedTask: (Task) -> Unit,
+    onSelectTask: (Task) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(Dimens.taskItemPadding)
     ) {
         items(items = taskList, key = { it.id }) { task ->
-            TaskItem(task = task, onTaskChecked = {onChangeCompletedTask(task)})
+            TaskItem(
+                task = task,
+                onTaskChecked = { onChangeCompletedTask(task) },
+                onSelectTask = onSelectTask
+            )
         }
     }
 }
@@ -121,6 +139,7 @@ fun TaskItem(
     task: Task,
     modifier: Modifier = Modifier,
     onTaskChecked: () -> Unit,
+    onSelectTask: (Task) -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -128,7 +147,8 @@ fun TaskItem(
             .padding(Dimens.taskItemPadding),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.taskItemElevation),
         shape = RoundedCornerShape(Dimens.taskItemCornerRadius),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        onClick = { onSelectTask(task) }
     ) {
         Row(
             modifier = Modifier

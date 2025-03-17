@@ -27,6 +27,10 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
     override suspend fun changeTaskCompleted(task: Task) {
         taskDao.insertTask(task.copy(isCompleted = !task.isCompleted).toEntity())
     }
+
+    override suspend fun getTaskDetails(taskId: Long): Flow<Task> =
+        taskDao.getTaskDetails(taskId)
+            .map { taskEntity -> taskEntity.toDomainTask() }
 }
 
 fun TaskEntity.toDomainTask(): Task {
