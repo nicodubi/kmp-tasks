@@ -38,7 +38,9 @@ fun TasksAppNavigation() {
         }
 
         composable<TaskDetailsRoute> {
-            TaskDetailsScreen(onBack = { navController.popBackStack() })
+            TaskDetailsScreen(
+                onBack = { navController.popBackStack() },
+                onDeletedTask = { navController.popBackStack() })
         }
     }
 }
