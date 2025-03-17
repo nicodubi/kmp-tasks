@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun TasksAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColorPalette else LightColorPalette,
@@ -53,5 +53,7 @@ private val DarkColorPalette = darkColorScheme(
 @Composable
 fun TaskTopAppBarColorsTheme() = TopAppBarDefaults.topAppBarColors(
     containerColor = MaterialTheme.colorScheme.primary,
-    titleContentColor = MaterialTheme.colorScheme.onPrimary
+    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+    actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
 )
