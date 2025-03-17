@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
  * Created by Nicolas Dubiansky on 12/03/2025.
  */
 class GetTaskDetailUseCase(private val taskRepository: TaskRepository) {
-    suspend fun getTaskDetails(taskId: Long): Flow<ResultState<Task, Nothing>> {
+    suspend fun getTaskDetails(taskId: Long): Flow<ResultState<Task?, Nothing>> {
         return taskRepository.getTaskDetails(taskId)
             .map { task -> ResultState.Success(task) }
     }
