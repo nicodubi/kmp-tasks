@@ -28,9 +28,14 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
         taskDao.insertTask(task.copy(isCompleted = !task.isCompleted).toEntity())
     }
 
-    override suspend fun getTaskDetails(taskId: Long): Flow<Task> =
+    override suspend fun getTaskDetails(taskId: Long): Flow<Task?> =
         taskDao.getTaskDetails(taskId)
-            .map { taskEntity -> taskEntity.toDomainTask() }
+            .map { taskEntity -> taskEntity?.toDomainTask() }
+
+    override suspend fun deleteTask(taskId: Long): Boolean {
+        val tasksDeleted = taskDao.deleteTaskById(taskId)
+        return tasksDeleted > 0
+    }
 }
 
 fun TaskEntity.toDomainTask(): Task {
