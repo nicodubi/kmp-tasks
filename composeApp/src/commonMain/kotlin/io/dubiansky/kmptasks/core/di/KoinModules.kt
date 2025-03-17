@@ -11,6 +11,7 @@ import io.dubiansky.kmptasks.feature.addtask.presentation.AddTaskViewModel
 import io.dubiansky.kmptasks.feature.taskdetail.domain.GetTaskDetailUseCase
 import io.dubiansky.kmptasks.feature.taskdetail.presentation.TaskDetailsViewModel
 import io.dubiansky.kmptasks.feature.tasklist.domain.ChangeCompletedTaskUseCase
+import io.dubiansky.kmptasks.feature.tasklist.domain.DeleteTaskUseCase
 import io.dubiansky.kmptasks.feature.tasklist.domain.GetTaskListUseCase
 import io.dubiansky.kmptasks.feature.tasklist.presentation.TaskListViewModel
 import org.koin.core.context.startKoin
@@ -39,6 +40,8 @@ val useCaseModule = module {
     factoryOf(::AddTaskUseCase)
     factoryOf(::ChangeCompletedTaskUseCase)
     factoryOf(::GetTaskDetailUseCase)
+    factoryOf(::DeleteTaskUseCase)
+
 
 }
 
