@@ -15,6 +15,7 @@ import io.dubiansky.kmptasks.core.common.domain.TaskCreationError
 import io.dubiansky.kmptasks.core.common.presentation.theme.TaskTopAppBarColorsTheme
 import io.dubiansky.kmptasks.core.common.presentation.ui.ErrorContent
 import io.dubiansky.kmptasks.core.common.presentation.ui.LoadingContent
+import io.dubiansky.kmptasks.core.common.presentation.ui.TaskIconBack
 import io.dubiansky.kmptasks.feature.addtask.data.TaskInput
 import kmptasks.composeapp.generated.resources.Res
 import kmptasks.composeapp.generated.resources.add_task_description_label
@@ -37,7 +38,10 @@ import org.koin.compose.viewmodel.koinViewModel
  * @param onBack callback event to navigate back
  */
 @Composable
-fun AddTaskScreen(addTaskViewModel: AddTaskViewModel = koinViewModel(), onBack: () -> Unit) {
+fun AddTaskScreen(
+    addTaskViewModel: AddTaskViewModel = koinViewModel(),
+    onBack: () -> Unit,
+) {
     val error = addTaskViewModel.error
     val showErrorOn = error?.let { getShowErrorOnFrom(it) }
 
@@ -103,6 +107,8 @@ fun AddTaskScreenContent(
             TaskInputField(
                 value = description,
                 onValueChange = { description = it },
+                singleLine = false,
+                modifier = Modifier.fillMaxHeight(0.9f),
                 label = stringResource(Res.string.add_task_description_label),
             )
             Button(
@@ -171,11 +177,8 @@ private fun AddTaskTopAppBar(
             Text(stringResource(Res.string.new_task))
         },
         navigationIcon = {
-            IconButton(onClick = { onBack() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                    contentDescription = stringResource(Res.string.back)
-                )
+            IconButton(onClick = onBack) {
+                TaskIconBack()
             }
         },
         colors = colors

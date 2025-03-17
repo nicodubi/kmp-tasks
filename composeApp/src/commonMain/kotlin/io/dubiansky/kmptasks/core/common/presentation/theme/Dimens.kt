@@ -12,4 +12,6 @@ object Dimens {
     val taskItemCornerRadius = 12.dp
     val taskItemContentPadding = 16.dp
     val taskItemSpacing = 12.dp
+    val dividerPadding = 8.dp
+    val dividerThickness = 1.dp
 }
