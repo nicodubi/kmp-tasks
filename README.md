@@ -1,14 +1,81 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# KMP Tasks  
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+A cross-platform task management app built using **Kotlin Multiplatform (KMP)** and **Jetpack Compose**, allowing seamless UI sharing across **Android** and **iOS**.  
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## 📝 Overview  
 
+KMP Tasks is a simple yet powerful task management app that enables users to create, complete, and manage their tasks efficiently. The app follows **Material Design 3** guidelines to provide a modern and intuitive user experience.  
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## 📌 Features  
+
+- Add, complete, and delete tasks  
+- Task detail view  
+- Shared UI using **Jetpack Compose**  
+- Dependency injection with **Koin**  
+- Modularized architecture for scalability  
+- **Theming & Dark Mode**  
+- **Screen Rotation Support**  
+
+## 🏗️ Tech Stack  
+
+- **Kotlin Multiplatform (KMP)** – Shared business logic across Android and iOS  
+- **Jetpack Compose** – Declarative UI  
+- **Koin** – Dependency injection  
+- **ViewModel** – State management  
+- **Room** – Local database  
+- **Coroutines + Flow** – Asynchronous programming  
+- **Gradle KMP Plugin** – Build system  
+
+## 🏛️ Architecture  
+
+KMP Tasks follows a **clean architecture** approach, ensuring separation of concerns:  
+
+```
+composeApp/src/commonMain/kotlin/io/dubiansky/kmptasks
+├── core
+│   ├── common        # Shared logic (data, domain, presentation)
+│   ├── di            # Dependency Injection (Koin)
+│   ├── entrypoint    # App entry point
+│   └── navigation    # Navigation management
+└── feature
+    ├── addtask       # Feature: Add Task
+    ├── taskdetail    # Feature: Task Detail
+    └── tasklist      # Feature: Task List
+```
+
+### 🛠 Layers  
+
+- **Data Layer** (`data/`): Handles repositories and database interactions  
+- **Domain Layer** (`domain/`): Business logic and use cases  
+- **Presentation Layer** (`presentation/`): UI components and state management  
+
+## 📱 Supported Platforms  
+
+- ✅ **Android**  
+- ✅ **iOS**  
+
+## 🚀 Getting Started  
+
+### Prerequisites  
+
+- Android Studio **Giraffe** or newer  
+- Xcode for iOS builds  
+- Kotlin Multiplatform plugin enabled  
+
+### Running on Android  
+
+```sh
+./gradlew androidApp:installDebug
+```
+
+### Running on iOS  
+
+```sh
+./gradlew iosApp:deployIosSimulator
+```
+
+## 📌 Future Improvements  
+
+- Cloud sync for tasks  
+- Notifications & reminders  
+- Geolocation tagging for tasks  
