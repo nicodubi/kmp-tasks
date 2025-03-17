@@ -9,10 +9,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import io.dubiansky.kmptasks.core.common.data.model.Task
+import io.dubiansky.kmptasks.core.common.domain.Error
 import io.dubiansky.kmptasks.core.common.domain.ResultState
 import io.dubiansky.kmptasks.core.navigation.TaskDetailsRoute
 import io.dubiansky.kmptasks.feature.taskdetail.domain.GetTaskDetailUseCase
 import io.dubiansky.kmptasks.feature.tasklist.domain.ChangeCompletedTaskUseCase
+import io.dubiansky.kmptasks.feature.tasklist.domain.DeleteTaskUseCase
 
 /**
  * Created by Nicolas Dubiansky on 12/03/2025.
@@ -23,12 +25,19 @@ class TaskDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val getTaskDetailUseCase: GetTaskDetailUseCase,
     private val changeCompletedTaskUseCase: ChangeCompletedTaskUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
 ) : ViewModel() {
 
     var isLoading by mutableStateOf(false)
         private set
 
+    var error: Error? by mutableStateOf(null)
+        private set
+
     var task: Task? by mutableStateOf(null)
+        private set
+
+    var taskDeleted by mutableStateOf(false)
         private set
 
 
@@ -58,6 +67,25 @@ class TaskDetailsViewModel(
             changeCompletedTaskUseCase.changeTaskCompleted(task)
         }
 
+    }
+
+    fun onDeleteTask(task: Task) {
+        isLoading = true
+        error = null
+        viewModelScope.launch {
+            val result = deleteTaskUseCase.deleteTask(task)
+            when (result) {
+                is ResultState.Success -> {
+                    taskDeleted = true
+                }
+
+                is ResultState.Failure -> {
+                    error = result.errorCause
+
+                }
+            }
+            isLoading = false
+        }
     }
 
 }
