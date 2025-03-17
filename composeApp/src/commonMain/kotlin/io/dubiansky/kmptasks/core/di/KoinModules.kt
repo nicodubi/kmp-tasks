@@ -8,6 +8,8 @@ import io.dubiansky.kmptasks.core.common.data.source.TaskLocalDataSource
 import io.dubiansky.kmptasks.core.common.domain.TaskRepository
 import io.dubiansky.kmptasks.feature.addtask.domain.AddTaskUseCase
 import io.dubiansky.kmptasks.feature.addtask.presentation.AddTaskViewModel
+import io.dubiansky.kmptasks.feature.taskdetail.domain.GetTaskDetailUseCase
+import io.dubiansky.kmptasks.feature.taskdetail.presentation.TaskDetailsViewModel
 import io.dubiansky.kmptasks.feature.tasklist.domain.ChangeCompletedTaskUseCase
 import io.dubiansky.kmptasks.feature.tasklist.domain.GetTaskListUseCase
 import io.dubiansky.kmptasks.feature.tasklist.presentation.TaskListViewModel
@@ -36,11 +38,14 @@ val useCaseModule = module {
     factoryOf(::GetTaskListUseCase)
     factoryOf(::AddTaskUseCase)
     factoryOf(::ChangeCompletedTaskUseCase)
+    factoryOf(::GetTaskDetailUseCase)
+
 }
 
 val viewModelModule = module {
     viewModelOf(::TaskListViewModel)
     viewModelOf(::AddTaskViewModel)
+    viewModelOf(::TaskDetailsViewModel)
 
 }
 
