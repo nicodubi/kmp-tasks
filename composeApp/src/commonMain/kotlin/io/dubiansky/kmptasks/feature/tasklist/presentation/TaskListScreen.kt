@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -41,11 +42,15 @@ import io.dubiansky.kmptasks.core.common.data.model.Task
 import io.dubiansky.kmptasks.core.common.domain.Error
 import io.dubiansky.kmptasks.core.common.presentation.theme.Dimens
 import io.dubiansky.kmptasks.core.common.presentation.theme.TaskTopAppBarColorsTheme
+import io.dubiansky.kmptasks.core.common.presentation.ui.EmptyState
 import io.dubiansky.kmptasks.core.common.presentation.ui.ErrorContent
 import io.dubiansky.kmptasks.core.common.presentation.ui.LoadingContent
 import kmptasks.composeapp.generated.resources.Res
 import kmptasks.composeapp.generated.resources.add
 import kmptasks.composeapp.generated.resources.app_name
+import kmptasks.composeapp.generated.resources.task_list_empty_state_button
+import kmptasks.composeapp.generated.resources.task_list_empty_state_description
+import kmptasks.composeapp.generated.resources.task_list_empty_state_title
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -93,11 +98,13 @@ fun TaskListScreenContent(
         modifier = modifier.fillMaxSize(),
         topBar = { TaskListTopAppBar() },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onAddTask() }) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(Res.string.add)
-                )
+            if (tasks.isNotEmpty()) {
+                FloatingActionButton(onClick = { onAddTask() }) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(Res.string.add)
+                    )
+                }
             }
         }) { paddingValues ->
         Surface(modifier = modifier.padding(paddingValues)) {
@@ -108,6 +115,14 @@ fun TaskListScreenContent(
             )
             error?.let { ErrorContent(error = it, snackbarHostState = snackbarHostState) }
             LoadingContent(isLoading)
+            EmptyState(
+                show = tasks.isEmpty(),
+                icon = Icons.Outlined.AddCircle,
+                title = stringResource(Res.string.task_list_empty_state_title),
+                description = stringResource(Res.string.task_list_empty_state_description),
+                buttonText = stringResource(Res.string.task_list_empty_state_button),
+                onActionClick = { onAddTask() }
+            )
         }
     }
 }

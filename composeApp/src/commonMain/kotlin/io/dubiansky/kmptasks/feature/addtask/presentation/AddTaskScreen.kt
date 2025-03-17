@@ -108,7 +108,7 @@ fun AddTaskScreenContent(
                 value = description,
                 onValueChange = { description = it },
                 singleLine = false,
-                modifier = Modifier.fillMaxHeight(0.9f),
+                modifier = Modifier.fillMaxHeight(0.5f),
                 label = stringResource(Res.string.add_task_description_label),
             )
             Button(

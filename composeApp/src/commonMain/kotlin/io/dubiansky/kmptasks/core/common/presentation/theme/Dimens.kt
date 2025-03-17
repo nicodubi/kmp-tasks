@@ -14,4 +14,9 @@ object Dimens {
     val taskItemSpacing = 12.dp
     val dividerPadding = 8.dp
     val dividerThickness = 1.dp
+
+    val emptyStatePadding = 24.dp
+    val emptyStateSpacingLarge = 16.dp
+    val emptyStateSpacingSmall = 8.dp
+    val emptyStateIconSize = 80.dp
 }
